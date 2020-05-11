@@ -1,15 +1,16 @@
-
 import 'dart:math';
-import 'package:WHOFlutter/api/question_data.dart';
-import 'package:WHOFlutter/components/page_scaffold.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:who_app/api/content/schema/question_content.dart';
+import 'package:who_app/components/dialogs.dart';
+import 'package:who_app/components/loading_indicator.dart';
+import 'package:who_app/components/page_scaffold/page_scaffold.dart';
+import 'package:who_app/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:html/dom.dart' as dom;
-
-typedef QuestionIndexDataSource = Future<List<QuestionItem>> Function(
-    BuildContext);
+import 'package:who_app/pages/main_pages/routes.dart';
 
 /// A Data driven series of questions and answers using HTML fragments.
 class QuestionIndexPage extends StatefulWidget {
@@ -25,7 +26,7 @@ class QuestionIndexPage extends StatefulWidget {
 }
 
 class _QuestionIndexPageState extends State<QuestionIndexPage> {
-  List<QuestionItem> _questions;
+  QuestionContent _questionContent;
 
   @override
   void initState() {
@@ -42,12 +43,19 @@ class _QuestionIndexPageState extends State<QuestionIndexPage> {
   }
 
   Future _loadQuestionData() async {
-    // Fetch the question data.
-    if (_questions != null) {
+    if (_questionContent != null) {
       return;
     }
-    _questions = await widget.dataSource(context);
-    setState(() {});
+    Locale locale = Localizations.localeOf(context);
+    try {
+      _questionContent = await widget.dataSource(locale);
+      await Dialogs.showUpgradeDialogIfNeededFor(context, _questionContent);
+    } catch (err) {
+      print("Error loading question data: $err");
+    }
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -56,24 +64,19 @@ class _QuestionIndexPageState extends State<QuestionIndexPage> {
   }
 
   Widget _buildPage() {
-    List items = (_questions ?? [])
-        .map((questionData) => QuestionTile(
-              questionItem: questionData,
-            ))
-        .toList();
+    List items = (_questionContent?.items ?? []).asMap().entries.map((entry) {
+      return QuestionTile(
+        questionItem: entry.value,
+        index: entry.key,
+      );
+    }).toList();
 
     return PageScaffold(
-      context,
+      heroTag: HeroTags.learn,
       body: [
         items.isNotEmpty
-            ? SliverList(
-                delegate: SliverChildListDelegate(items),
-              )
-            : SliverToBoxAdapter(
-                child: Padding(
-                padding: const EdgeInsets.all(48.0),
-                child: CupertinoActivityIndicator(),
-              ))
+            ? SliverList(delegate: SliverChildListDelegate(items))
+            : LoadingIndicator(),
       ],
       title: widget.title,
     );
@@ -83,9 +86,12 @@ class _QuestionIndexPageState extends State<QuestionIndexPage> {
 class QuestionTile extends StatefulWidget {
   const QuestionTile({
     @required this.questionItem,
+    @required this.index,
   });
 
   final QuestionItem questionItem;
+
+  final int index;
 
   @override
   _QuestionTileState createState() => _QuestionTileState();
@@ -95,6 +101,8 @@ class _QuestionTileState extends State<QuestionTile>
     with TickerProviderStateMixin {
   AnimationController rotationController;
 
+  Color titleColor;
+
   @override
   void initState() {
     super.initState();
@@ -103,44 +111,66 @@ class _QuestionTileState extends State<QuestionTile>
         vsync: this,
         lowerBound: 0,
         upperBound: pi / 4);
+
+    titleColor = Colors.black;
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      child: Column(children: <Widget>[
+      child: Stack(children: <Widget>[
         Divider(
           height: 1,
+          thickness: 1,
         ),
-        ExpansionTile(
-          onExpansionChanged: (expanded) {
-            if (expanded) {
-              rotationController.forward();
-            } else {
-              rotationController.reverse();
-            }
-          },
-          key: PageStorageKey<String>(widget.questionItem.title),
-          trailing: AnimatedBuilder(
-            animation: rotationController,
-            child: Icon(Icons.add_circle_outline, color: Color(0xff26354E)),
-            builder: (context, child) {
-              return Transform.rotate(
-                angle: rotationController.value,
-                child: child,
-              );
+        Material(
+          type: MaterialType.transparency,
+          child: ExpansionTile(
+            onExpansionChanged: (expanded) {
+              if (expanded) {
+                FirebaseAnalytics().logEvent(
+                    name: 'QuestionExpanded',
+                    parameters: {'index': widget.index});
+                rotationController.forward();
+              } else {
+                rotationController.reverse();
+              }
             },
+            key: PageStorageKey<String>(widget.questionItem.title),
+            trailing: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                AnimatedBuilder(
+                  animation: rotationController,
+                  child:
+                      Icon(Icons.add_circle_outline, color: Color(0xff3C4245)),
+                  builder: (context, child) {
+                    return Transform.rotate(
+                      angle: rotationController.value,
+                      child: child,
+                    );
+                  },
+                ),
+              ],
+            ),
+            title: Padding(
+              padding: EdgeInsets.symmetric(vertical: 12),
+              child: Html(
+                data: widget.questionItem.title,
+                defaultTextStyle: _titleStyle.copyWith(
+                  fontSize: 18 * MediaQuery.of(context).textScaleFactor,
+                ),
+              ),
+            ),
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 32),
+                child: html(widget.questionItem.body),
+              )
+            ],
           ),
-          title: html(widget.questionItem.title),
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 16, right: 16, top: 32, bottom: 32),
-              child: html(widget.questionItem.body),
-            )
-          ],
-        )
+        ),
       ]),
     );
   }
@@ -160,16 +190,41 @@ class _QuestionTileState extends State<QuestionTile>
       },
       onImageTap: (src) {},
       // This is our css :)
+      customEdgeInsets: (dom.Node node) {
+        if (node is dom.Element) {
+          switch (node.localName) {
+            case "p":
+              return EdgeInsets.only(bottom: 8);
+              break;
+            default:
+              return EdgeInsets.zero;
+          }
+        } else {
+          return EdgeInsets.zero;
+        }
+      },
       customTextStyle: (dom.Node node, TextStyle baseStyle) {
         if (node is dom.Element) {
           switch (node.localName) {
             case "h2":
-              return baseStyle
-                  .merge(TextStyle(fontSize: 20, color: Color(0xff26354E), fontWeight: FontWeight.w500));
+              return baseStyle.merge(TextStyle(
+                  fontSize: 20,
+                  color: Color(0xff3C4245),
+                  fontWeight: FontWeight.w500));
+            case "b":
+              return baseStyle.merge(TextStyle(fontWeight: FontWeight.bold));
           }
         }
-        return baseStyle.merge(TextStyle(color: Color(0xff26354E), fontWeight: FontWeight.w500));
+        return baseStyle.merge(_bodyStyle);
       },
     );
   }
+
+  final _bodyStyle = TextStyle(
+      color: Constants.textColor, fontWeight: FontWeight.w400, height: 1.5);
+
+  final _titleStyle = TextStyle(
+      color: Color(0xff3C4245),
+      fontWeight: FontWeight.w600,
+      height: 1.3); //TODO: ON OPEN MAKE TEXT DARKER
 }

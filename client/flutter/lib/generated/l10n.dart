@@ -9,25 +9,24 @@ import 'intl/messages_all.dart';
 // **************************************************************************
 
 class S {
-  S(this.localeName);
-  
-  static const AppLocalizationDelegate delegate =
-    AppLocalizationDelegate();
+  S();
+
+  static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final String name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
+    final String name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
     final String localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
-      return S(localeName);
+      return S();
     });
-  } 
+  }
 
   static S of(BuildContext context) {
     return Localizations.of<S>(context, S);
   }
-
-  final String localeName;
 
   String get commonWorldHealthOrganization {
     return Intl.message(
@@ -40,7 +39,7 @@ class S {
 
   String get commonWorldHealthOrganizationCoronavirusApp {
     return Intl.message(
-      'COVID-19 App',
+      'COVID-19',
       name: 'commonWorldHealthOrganizationCoronavirusApp',
       desc: '',
       args: [],
@@ -49,14 +48,15 @@ class S {
 
   String get commonWhoAppShareIconButtonDescription {
     return Intl.message(
-      'Check out the official COVID-19 Guide App https://whocoronavirus.org/app',
+      'Check out the COVID-19 app https://whoapp.org/app',
       name: 'commonWhoAppShareIconButtonDescription',
       desc: '',
       args: [],
     );
   }
 
-  String commonWorldHealthOrganizationCoronavirusAppVersion(dynamic version, dynamic buildNumber) {
+  String commonWorldHealthOrganizationCoronavirusAppVersion(
+      Object version, Object buildNumber) {
     return Intl.message(
       'Version $version ($buildNumber)',
       name: 'commonWorldHealthOrganizationCoronavirusAppVersion',
@@ -65,7 +65,7 @@ class S {
     );
   }
 
-  String commonWorldHealthOrganizationCoronavirusCopyright(dynamic year) {
+  String commonWorldHealthOrganizationCoronavirusCopyright(Object year) {
     return Intl.message(
       '© $year WHO',
       name: 'commonWorldHealthOrganizationCoronavirusCopyright',
@@ -112,7 +112,7 @@ class S {
 
   String get legalLandingPageTitle {
     return Intl.message(
-      'Official WHO COVID-19 Information App',
+      'COVID-19 Information App',
       name: 'legalLandingPageTitle',
       desc: '',
       args: [],
@@ -148,7 +148,7 @@ class S {
 
   String get legalLandingPageTermsOfServiceLinkUrl {
     return Intl.message(
-      'https://whocoronavirus.org/terms',
+      'https://whoapp.org/terms',
       name: 'legalLandingPageTermsOfServiceLinkUrl',
       desc: '',
       args: [],
@@ -175,7 +175,7 @@ class S {
 
   String get legalLandingPagePrivacyPolicyLinkUrl {
     return Intl.message(
-      'https://whocoronavirus.org/privacy',
+      'https://whoapp.org/privacy',
       name: 'legalLandingPagePrivacyPolicyLinkUrl',
       desc: '',
       args: [],
@@ -220,7 +220,7 @@ class S {
 
   String get notificationsPagePermissionRequestPageTitle {
     return Intl.message(
-      'Stay up to date on the Coronavirus',
+      'Stay up to date on COVID-19',
       name: 'notificationsPagePermissionRequestPageTitle',
       desc: '',
       args: [],
@@ -229,7 +229,7 @@ class S {
 
   String get notificationsPagePermissionRequestPageDescription {
     return Intl.message(
-      'To stay up to date with Coronavirus news, turn on app notifications from the World Health Organization.',
+      'To stay up to date with COVID-19 news, turn on app notifications from the World Health Organization.',
       name: 'notificationsPagePermissionRequestPageDescription',
       desc: '',
       args: [],
@@ -256,7 +256,7 @@ class S {
 
   String get homePagePageTitle {
     return Intl.message(
-      'Coronavirus',
+      'COVID-19',
       name: 'homePagePageTitle',
       desc: '',
       args: [],
@@ -265,7 +265,7 @@ class S {
 
   String get homePagePageSubTitle {
     return Intl.message(
-      'Virus response & tools',
+      'Information & tools',
       name: 'homePagePageSubTitle',
       desc: '',
       args: [],
@@ -274,7 +274,7 @@ class S {
 
   String get homePagePageButtonQuestions {
     return Intl.message(
-      'Questions',
+      'Questions & Answers',
       name: 'homePagePageButtonQuestions',
       desc: '',
       args: [],
@@ -283,7 +283,7 @@ class S {
 
   String get homePagePageButtonProtectYourself {
     return Intl.message(
-      'Protect yourself',
+      'Protect Yourself',
       name: 'homePagePageButtonProtectYourself',
       desc: '',
       args: [],
@@ -292,7 +292,7 @@ class S {
 
   String get homePagePageButtonLatestNumbers {
     return Intl.message(
-      'Latest \nNumbers',
+      'Latest Numbers',
       name: 'homePagePageButtonLatestNumbers',
       desc: '',
       args: [],
@@ -301,7 +301,7 @@ class S {
 
   String get homePagePageButtonYourQuestionsAnswered {
     return Intl.message(
-      'Your \nQuestions \nAnswered',
+      'Questions & Answers',
       name: 'homePagePageButtonYourQuestionsAnswered',
       desc: '',
       args: [],
@@ -310,7 +310,7 @@ class S {
 
   String get homePagePageButtonWHOMythBusters {
     return Intl.message(
-      'WHO Myth-busters',
+      'Get the Facts',
       name: 'homePagePageButtonWHOMythBusters',
       desc: '',
       args: [],
@@ -328,7 +328,7 @@ class S {
 
   String get homePagePageButtonWHOMythBustersDescription {
     return Intl.message(
-      'Learn the facts about Coronavirus and how to prevent the spread',
+      'Learn the facts about COVID-19 and how to prevent the spread',
       name: 'homePagePageButtonWHOMythBustersDescription',
       desc: '',
       args: [],
@@ -346,7 +346,7 @@ class S {
 
   String get homePagePageSliverListShareTheApp {
     return Intl.message(
-      'Share The App',
+      'Share the app',
       name: 'homePagePageSliverListShareTheApp',
       desc: '',
       args: [],
@@ -355,7 +355,7 @@ class S {
 
   String get homePagePageSliverListProvideFeedback {
     return Intl.message(
-      'Provide app feedback',
+      'Provide App Feedback',
       name: 'homePagePageSliverListProvideFeedback',
       desc: '',
       args: [],
@@ -398,6 +398,24 @@ class S {
     );
   }
 
+  String get homePagePageSliverListSettingsNotificationsHeader {
+    return Intl.message(
+      'Notifications',
+      name: 'homePagePageSliverListSettingsNotificationsHeader',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get homePagePageSliverListSettingsNotificationsInfo {
+    return Intl.message(
+      'Allow WHO to send you notifications to inform you of updates',
+      name: 'homePagePageSliverListSettingsNotificationsInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get homePagePageSliverListAboutTheApp {
     return Intl.message(
       'About the app',
@@ -409,7 +427,7 @@ class S {
 
   String get homePagePageSliverListAboutTheAppDialog {
     return Intl.message(
-      'The official World Health Organization COVID-19 App.',
+      'The COVID-19 App.',
       name: 'homePagePageSliverListAboutTheAppDialog',
       desc: '',
       args: [],
@@ -418,7 +436,7 @@ class S {
 
   String get homePagePageSliverListSupport {
     return Intl.message(
-      'Help support the relief effort',
+      'Help support the\nrelief effort',
       name: 'homePagePageSliverListSupport',
       desc: '',
       args: [],
@@ -427,7 +445,7 @@ class S {
 
   String get homePagePageSliverListDonate {
     return Intl.message(
-      'Donate here',
+      'Donate Here',
       name: 'homePagePageSliverListDonate',
       desc: '',
       args: [],
@@ -436,7 +454,7 @@ class S {
 
   String get homePagePageSliverListDonateUrl {
     return Intl.message(
-      'https://www.who.int/Covid19ResponseFund',
+      'https://covid19responsefund.org/',
       name: 'homePagePageSliverListDonateUrl',
       desc: '',
       args: [],
@@ -445,7 +463,7 @@ class S {
 
   String get homePagePageButtonLatestNumbersUrl {
     return Intl.message(
-      'https://experience.arcgis.com/experience/685d0ace521648f8a5beeeee1b9125cd',
+      'https://who.sprinklr.com',
       name: 'homePagePageButtonLatestNumbersUrl',
       desc: '',
       args: [],
@@ -472,7 +490,7 @@ class S {
 
   String get protectYourselfListOfItemsPageListItem1 {
     return Intl.message(
-      '*Wash your hands* with soap and water for at least 20 seconds',
+      '*Wash your hands* with soap and water to avoid getting sick and spreading infections to others',
       name: 'protectYourselfListOfItemsPageListItem1',
       desc: '',
       args: [],
@@ -517,7 +535,7 @@ class S {
 
   String get travelAdviceContainerText {
     return Intl.message(
-      'WHO continues to advise against the application of travel or trade restrictions to countries experiencing COVID-19 outbreaks. It is prudent for travellers who are sick to delay or avoid travel to affected areas, in particular for elderly travellers and people with chronic diseases or underlying healh conditions. “Affected areas” are considered those countries, provinces, territories or cities experiencing ongoing transmission of COVID-19, in contract to areas reporting only imported cases.',
+      '<p>WHO continues to <b>advise against the application of travel or trade restrictions</b> to countries experiencing COVID-19 outbreaks.</p> <p><b>It is prudent for travellers who are sick to delay or avoid travel to affected areas</b>, in particular for elderly travellers and people with chronic diseases or underlying health conditions. “Affected areas” are considered those countries, provinces, territories or cities experiencing ongoing transmission of COVID-19, in contract to areas reporting only imported cases.</p>',
       name: 'travelAdviceContainerText',
       desc: '',
       args: [],
@@ -535,7 +553,7 @@ class S {
 
   String get travelAdvicePageListItem1Text {
     return Intl.message(
-      'Self-monitor for symptoms for 14 days and follow national protocols of receiving countries',
+      'Self-monitor for symptoms for 14 days and follow national protocols of receiving countries.',
       name: 'travelAdvicePageListItem1Text',
       desc: '',
       args: [],
@@ -571,7 +589,7 @@ class S {
 
   String get travelAdvicePageListItem3Text {
     return Intl.message(
-      'If symptoms occur, travellers are advsed to contact local health care providers, preferably by phone, and inform them of their symptoms and travel history.',
+      'If symptoms occur, travellers are advised to contact local health care providers, preferably by phone, and inform them of their symptoms and travel history.',
       name: 'travelAdvicePageListItem3Text',
       desc: '',
       args: [],
@@ -589,7 +607,7 @@ class S {
 
   String get travelAdvicePageButtonGeneralRecommendations {
     return Intl.message(
-      'General\nRecommendations',
+      'General Recommendations',
       name: 'travelAdvicePageButtonGeneralRecommendations',
       desc: '',
       args: [],
@@ -607,7 +625,7 @@ class S {
 
   String get travelAdvicePageButtonGeneralRecommendationsDescription {
     return Intl.message(
-      'Learn the facts about Coronavirus and how to prevent the spread',
+      'Learn the facts about COVID-19 and how to prevent the spread',
       name: 'travelAdvicePageButtonGeneralRecommendationsDescription',
       desc: '',
       args: [],
@@ -931,7 +949,7 @@ class S {
 
   String get aboutPageTermsOfServiceLinkUrl {
     return Intl.message(
-      'https://whocoronavirus.org/terms',
+      'https://whoapp.org/terms',
       name: 'aboutPageTermsOfServiceLinkUrl',
       desc: '',
       args: [],
@@ -949,7 +967,7 @@ class S {
 
   String get aboutPagetermsOfServiceLinkUrl {
     return Intl.message(
-      'https://whocoronavirus.org/privacy',
+      'https://whoapp.org/privacy',
       name: 'aboutPagetermsOfServiceLinkUrl',
       desc: '',
       args: [],
@@ -965,7 +983,8 @@ class S {
     );
   }
 
-  String aboutPageBuiltByCreditText(dynamic copyrightString, dynamic versionString) {
+  String aboutPageBuiltByCreditText(
+      Object copyrightString, Object versionString) {
     return Intl.message(
       '$copyrightString \n\n$versionString \nBuilt by the WHO COVID-19 App Collective.',
       name: 'aboutPageBuiltByCreditText',
@@ -974,7 +993,7 @@ class S {
     );
   }
 
-  String aboutPageThanksToText(dynamic team) {
+  String aboutPageThanksToText(Object team) {
     return Intl.message(
       'Thanks to: $team',
       name: 'aboutPageThanksToText',
@@ -985,8 +1004,143 @@ class S {
 
   String get aboutPageTitle {
     return Intl.message(
-      'About',
+      'About the App',
       name: 'aboutPageTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get latestNumbersPageTitle {
+    return Intl.message(
+      'Recent Numbers',
+      name: 'latestNumbersPageTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get latestNumbersPageCasesDimension {
+    return Intl.message(
+      'Global Cases',
+      name: 'latestNumbersPageCasesDimension',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get latestNumbersPageDailyToggle {
+    return Intl.message(
+      'New',
+      name: 'latestNumbersPageDailyToggle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get latestNumbersPageDeathsDimension {
+    return Intl.message(
+      'Global Deaths',
+      name: 'latestNumbersPageDeathsDimension',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get latestNumbersPageGlobalCasesTitle {
+    return Intl.message(
+      'GLOBAL CASES',
+      name: 'latestNumbersPageGlobalCasesTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get latestNumbersPageGlobalDeaths {
+    return Intl.message(
+      'GLOBAL DEATHS',
+      name: 'latestNumbersPageGlobalDeaths',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String latestNumbersPageLastUpdated(Object lastUpd) {
+    return Intl.message(
+      'Last updated $lastUpd',
+      name: 'latestNumbersPageLastUpdated',
+      desc: '',
+      args: [lastUpd],
+    );
+  }
+
+  String get latestNumbersPageTotalToggle {
+    return Intl.message(
+      'Total',
+      name: 'latestNumbersPageTotalToggle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get latestNumbersPageUpdating {
+    return Intl.message(
+      'Updating…',
+      name: 'latestNumbersPageUpdating',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get latestNumbersPageViewLiveData {
+    return Intl.message(
+      'View Live Data',
+      name: 'latestNumbersPageViewLiveData',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String latestNumbersPageSourceGlobalStatsAttribution(Object attribution) {
+    return Intl.message(
+      'Source: $attribution',
+      name: 'latestNumbersPageSourceGlobalStatsAttribution',
+      desc: '',
+      args: [attribution],
+    );
+  }
+
+  String get notificationsEnableDialogHeader {
+    return Intl.message(
+      'Enable notifications',
+      name: 'notificationsEnableDialogHeader',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get notificationsEnableDialogText {
+    return Intl.message(
+      'As you\'ve previously disabled notifications, we\'ll need you to manually re-enable notifications via the system settings for the app',
+      name: 'notificationsEnableDialogText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get notificationsEnableDialogOptionOpenSettings {
+    return Intl.message(
+      'Open Settings',
+      name: 'notificationsEnableDialogOptionOpenSettings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get notificationsEnableDialogOptionLater {
+    return Intl.message(
+      'Maybe later',
+      name: 'notificationsEnableDialogOptionLater',
       desc: '',
       args: [],
     );
@@ -998,7 +1152,10 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
 
   List<Locale> get supportedLocales {
     return const <Locale>[
-      Locale.fromSubtags(languageCode: 'ru', countryCode: 'RU'), Locale.fromSubtags(languageCode: 'es', countryCode: 'ES'), Locale.fromSubtags(languageCode: 'en', countryCode: 'GB'), Locale.fromSubtags(languageCode: 'ar'), Locale.fromSubtags(languageCode: 'fr', countryCode: 'FR'), Locale.fromSubtags(languageCode: 'en'), Locale.fromSubtags(languageCode: 'en', countryCode: 'US'), Locale.fromSubtags(languageCode: 'zh', countryCode: 'CN'),
+      Locale.fromSubtags(languageCode: 'en'),
+      Locale.fromSubtags(languageCode: 'en', countryCode: 'US'),
+      Locale.fromSubtags(languageCode: 'fr'),
+      Locale.fromSubtags(languageCode: 'fr', countryCode: 'FR'),
     ];
   }
 

@@ -10,7 +10,8 @@ public enum Environment {
   TEST("http://localhost:3000"),
   DEVELOPMENT("http://localhost:3000"),
   STAGING("https://staging.whocoronavirus.org"),
-  PRODUCTION("https://whocoronavirus.org");
+  HACKER_ONE("https://hackerone.whocoronavirus.org"),
+  PRODUCTION("https://whoapp.org");
 
   private final String url;
 
@@ -27,9 +28,15 @@ public enum Environment {
   public static Environment current() {
     String applicationId = AppEngine.applicationId();
     if (applicationId == null) return TEST;
+
     switch (applicationId) {
       case "who-myhealth-staging": return STAGING;
-      case "who-myhealth-production": return PRODUCTION;
+      case "who-myhealth-hackerone": return HACKER_ONE;
+      case "who-myhealth-europe": return PRODUCTION;
+
+      // Workaround for bug in App Engine. Not sure where those 2 chars at the beginning come from.
+      case "o~who-myhealth-europe": return PRODUCTION;
+
       case "test": return TEST;
       case AppEngine.DEVELOPMENT_ID: return DEVELOPMENT;
       default: throw new RuntimeException("Unrecognized application ID: " + applicationId);
@@ -43,7 +50,8 @@ public enum Environment {
 
   /** True if this is the production server. */
   public static boolean isProduction() {
-    return current() == PRODUCTION;
+    Environment current = current();
+    return current == PRODUCTION || current == HACKER_ONE;
   }
 
   /** True if this is the staging server. */
@@ -56,6 +64,7 @@ public enum Environment {
     Environment current = current();
     return current == DEVELOPMENT
         || current == STAGING
+        || current == HACKER_ONE
         || current == PRODUCTION;
   }
 

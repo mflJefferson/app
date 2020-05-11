@@ -8,6 +8,8 @@ import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static who.ForwardingServlet.forwardTo;
+
 /**
  * Guice and web configuration. Use this instead of web.xml.
  */
@@ -20,6 +22,8 @@ public class WhoServletModule extends ServletModule {
     serve("/remote_api").with(new RemoteApiServlet());
 
     serve("/app").with(new AppStoreServlet());
+    serve("/terms").with(forwardTo("/terms.pdf"));
+    serve("/privacy").with(forwardTo("/privacy.pdf"));
 
     // Set up Objectify
     filter("/*").through(ObjectifyFilter.class);
@@ -27,6 +31,10 @@ public class WhoServletModule extends ServletModule {
 
     // Register Objectify entities
     ObjectifyService.register(Client.class);
+    ObjectifyService.register(StoredCaseStats.class);
+
+    // Internal cron jobs using Objectify but not requiring Clients.
+    serve("/internal/cron/refreshCaseStats").with(new RefreshCaseStatsServlet());
 
     // Set up Present RPC
     filter("/*").through(WhoRpcFilter.class);
